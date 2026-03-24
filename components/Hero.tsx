@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useRef, useEffect } from 'react';
-import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion';
+import { motion, useScroll, useTransform, useMotionValue, useSpring, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 
-import { LayoutGrid, ShieldCheck, ShoppingBag, ArrowRight } from 'lucide-react';
+import { LayoutGrid, ShieldCheck, ShoppingBag, ArrowRight, Sparkles } from 'lucide-react';
 
 const useMousePosition = () => {
   const mouseX = useMotionValue(0);
@@ -32,17 +32,15 @@ export default function Hero() {
 
   const layer1X = useTransform(springX, (val: number) => val * 0.05);
   const layer1Y = useTransform(springY, (val: number) => val * 0.05);
-  const layer2X = useTransform(springX, (val: number) => val * 0.1);
-  const layer2Y = useTransform(springY, (val: number) => val * 0.1);
-
+  
   const { scrollYProgress } = useScroll({
     target: targetRef,
     offset: ["start start", "end start"]
   });
 
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
-  const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
-  const yTranslate = useTransform(scrollYProgress, [0, 1], [0, -100]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.95]);
+  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const yTranslate = useTransform(scrollYProgress, [0, 1], [0, 100]);
 
   const line1 = "The Unified Marketplace";
   const line2 = "for Enterprise AI";
@@ -52,265 +50,130 @@ export default function Hero() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3,
+        staggerChildren: 0.15,
+        delayChildren: 0.2,
       }
     }
   };
 
-  const charVariants = {
-    hidden: { opacity: 0, y: 20, filter: 'blur(8px)' },
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30, filter: 'blur(10px)' },
     visible: { 
       opacity: 1, 
       y: 0, 
       filter: 'blur(0px)',
-      transition: { duration: 0.5, ease: "easeOut" }
+      transition: { duration: 1, ease: [0.16, 1, 0.3, 1] }
     }
-  } as any;
+  };
 
-  const AnimatedText = ({ text, className, style }: { text: string, className?: string, style?: any }) => {
-    return (
-      <motion.div
-        variants={{
-          visible: { transition: { staggerChildren: 0.03 } }
-        } as any}
-        className={className}
-        style={style}
-      >
-        {text.split('').map((char, index) => (
-          <motion.span
-            key={index}
-            variants={charVariants}
-            style={{ display: 'inline-block', whiteSpace: char === ' ' ? 'pre' : 'normal' }}
-          >
-            {char}
-          </motion.span>
-        ))}
-      </motion.div>
-    );
+  const charVariants = {
+    hidden: { opacity: 0, y: 40, rotateX: 90 },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      rotateX: 0,
+      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] }
+    }
   };
 
   return (
     <section 
       ref={targetRef} 
-      className="hero-section relative overflow-hidden bg-black flex items-center justify-center pt-24 pb-12" 
-      style={{ minHeight: '100vh', perspective: '1000px' }}
+      className="hero-section relative min-h-screen flex items-center justify-center pt-24 pb-12 overflow-hidden bg-black" 
+      style={{ perspective: '1200px' }}
     >
-      {/* 🌌 Atmospheric Background with Parallax */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        {/* Layer 1: Slow Parallax */}
+      {/* 🌌 Refined Particle / Light Leak Overlay */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
         <motion.div 
           style={{ x: layer1X, y: layer1Y }}
-          className="absolute top-[20%] left-1/4 w-[60vw] h-[60vh] bg-blue-600/10 rounded-full blur-[120px]" 
+          className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-blue-600/5 rounded-full blur-[150px]" 
         />
-        
-        {/* Layer 2: Fast Parallax Blobs */}
         <motion.div 
-          style={{ x: layer2X, y: layer2Y }}
-          className="absolute bottom-[10%] right-[10%] w-[40vw] h-[40vh] bg-purple-600/10 rounded-full blur-[100px]" 
-        />
-
-        <motion.div 
-          animate={{ 
-            y: [0, -20, 0],
-            opacity: [0.1, 0.2, 0.1]
-          }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          style={{ x: layer2X, y: layer2Y }}
-          className="absolute top-[40%] right-[20%] w-[30vw] h-[30vh] bg-indigo-500/10 rounded-full blur-[80px]" 
-        />
-
-        {/* 🔮 Background Mesh / Grid */}
-        <div 
-          className="absolute inset-0 opacity-[0.05]"
-          style={{
-            backgroundImage: `linear-gradient(to right, #222 1px, transparent 1px), linear-gradient(to bottom, #222 1px, transparent 1px)`,
-            backgroundSize: '100px 100px',
-          }}
+          style={{ x: layer1X, y: layer1Y }}
+          className="absolute bottom-[-10%] right-[-10%] w-[40vw] h-[40vw] bg-purple-600/5 rounded-full blur-[150px]" 
         />
       </div>
 
       <motion.div
-        style={{ scale, opacity, y: yTranslate, zIndex: 10 }}
-        className="w-full max-w-7xl px-4 flex flex-col items-center text-center"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        style={{ scale, opacity, y: yTranslate }}
+        className="relative z-10 w-full max-w-7xl px-6 flex flex-col items-center text-center"
       >
-        {/* 🏷️ Interactive Platform Badge */}
+        {/* 🏷️ Smart Badge */}
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.5 }}
-          whileHover={{ scale: 1.05 }}
-          style={{
-            marginBottom: '2rem',
-            padding: '0.6rem 1.25rem',
-            borderRadius: '9999px',
-            border: '1px solid rgba(255, 255, 255, 0.15)',
-            background: 'rgba(255, 255, 255, 0.05)',
-            backdropFilter: 'blur(20px)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.6rem',
-            cursor: 'default',
-            width: 'fit-content',
-            alignSelf: 'center',
-            margin: '0 auto 2rem auto'
-          }}
+          variants={itemVariants}
+          className="mb-10 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-xl flex items-center gap-2 group cursor-pointer hover:border-white/20 transition-colors"
         >
-          <div style={{ 
-            width: '6px', 
-            height: '6px', 
-            borderRadius: '50%', 
-            background: '#60a5fa',
-            boxShadow: '0 0 10px #60a5fa' 
-          }} className="animate-pulse" />
-          <span style={{ 
-            fontSize: '11px', 
-            textTransform: 'uppercase', 
-            fontWeight: 700, 
-            letterSpacing: '0.15em', 
-            color: 'white' 
-          }}>
-            Enterprise Intelligence Platform
+          <Sparkles size={14} className="text-blue-400 group-hover:rotate-12 transition-transform" />
+          <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-white/80">
+            Next-Gen AI Ecosystem 2026
           </span>
+          <ArrowRight size={12} className="text-white/40 group-hover:translate-x-1 transition-transform" />
         </motion.div>
 
-        {/* 🔥 Compact Powerful Headline */}
-        <motion.h1 
-          className="relative group cursor-default"
-          initial="hidden"
-          animate="visible"
-          whileHover={{ scale: 1.01 }}
-          transition={{ type: "spring", stiffness: 300, damping: 20 }}
-        >
-          <div className="flex flex-col space-y-0 items-center">
-            <AnimatedText 
-              text={line1}
-              style={{ 
-                fontSize: 'clamp(1.8rem, 5vw, 3.8rem)', // Further reduced
-                lineHeight: 1.0,
-                fontWeight: 900, 
-                fontFamily: "'Inter', sans-serif",
-                color: 'white',
-                letterSpacing: '-0.02em'
-              }}
-            />
-            
-            <AnimatedText 
-              text={line2}
-              style={{ 
-                fontSize: 'clamp(1.8rem, 5vw, 3.8rem)', // Further reduced
-                lineHeight: 1.0,
-                fontWeight: 900, 
-                fontFamily: "'Inter', sans-serif",
-                color: 'transparent',
-                backgroundImage: 'linear-gradient(to bottom, #fff, rgba(255,255,255,0.6))',
-                backgroundClip: 'text',
-                WebkitBackgroundClip: 'text',
-                letterSpacing: '-0.02em'
-              }}
-            />
-          </div>
+        {/* 💎 Title with Mask Reveal */}
+        <div className="flex flex-col items-center mb-8">
+          <motion.h1 className="flex flex-col">
+            <div className="overflow-hidden py-2">
+              <motion.div
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
+                className="text-[clamp(2.5rem,8vw,5.5rem)] font-black tracking-tighter leading-[0.9] text-white"
+              >
+                {line1}
+              </motion.div>
+            </div>
+            <div className="overflow-hidden py-2">
+              <motion.div
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.6 }}
+                className="text-[clamp(2.5rem,8vw,5.5rem)] font-black tracking-tighter leading-[0.9] bg-gradient-to-b from-white via-white/70 to-white/30 bg-clip-text text-transparent"
+              >
+                {line2}
+              </motion.div>
+            </div>
+          </motion.h1>
+        </div>
 
-          {/* ✨ Text Shimmer Effect Overlay */}
-          <div className="absolute inset-0 pointer-events-none overflow-hidden mix-blend-overlay opacity-30">
-            <motion.div 
-              animate={{
-                x: ['-100%', '100%']
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: "linear"
-              }}
-              className="w-1/2 h-full bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-[-20deg]"
-            />
-          </div>
-        </motion.h1>
-
-        {/* 📋 Minimal Subtitle - Pushed down, bold, and larger as requested */}
+        {/* 📜 Strategic Description */}
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
-          style={{
-            color: 'white',
-            opacity: 0.7, 
-            maxWidth: '800px', 
-            margin: '2rem auto 0 auto', 
-            textAlign: 'center', 
-                fontSize: 'clamp(1rem, 2vw, 1.15rem)',
-            fontWeight: 500, 
-            lineHeight: 1.6, 
-            letterSpacing: '0.01em',
-            fontFamily: "'Inter', sans-serif"
-          }}
+          variants={itemVariants}
+          className="max-w-2xl text-lg md:text-xl text-white/50 leading-relaxed font-medium mb-12"
         >
-          Unified infrastructure for the worlds most advanced AI models. 
-          Built for the speed of modern enterprise.
+          A frictionless layer for deploying, scaling, and orchestrating 
+          <span className="text-white/90"> enterprise-grade intelligence.</span> 
+          The future of AI commerce starts here.
         </motion.p>
 
-        {/* 🔘 Premium CTAs - Styled properly as buttons */}
+        {/* 🎬 Premium CTAs */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1 }}
-          style={{ 
-            marginTop: '2rem', 
-            display: 'flex', 
-            flexDirection: 'row', 
-            alignItems: 'center', 
-            gap: '1.25rem',
-            justifyContent: 'center',
-            flexWrap: 'wrap'
-          }}
+          variants={itemVariants}
+          className="flex flex-col sm:flex-row items-center gap-5"
         >
-          <Link href="/demo">
+          <Link href="/access" className="w-full sm:w-auto">
             <MagneticButton>
-              <button
-                style={{
-                  padding: '1.2rem 3rem',
-                  background: 'white',
-                  color: 'black',
-                  fontWeight: 700,
-                  fontSize: '1rem',
-                  borderRadius: '9999px',
-                  border: 'none',
-                  cursor: 'pointer',
-                  transition: 'box-shadow 0.3s ease',
-                  fontFamily: "'Inter', sans-serif"
-                }}
-              >
-                Request Access
+              <button className="w-full px-10 py-5 bg-white text-black font-bold rounded-2xl hover:shadow-[0_0_40px_rgba(255,255,255,0.3)] transition-all duration-500 scale-100 active:scale-95">
+                Launch Platform
               </button>
             </MagneticButton>
           </Link>
-          <Link href="/solutions">
+          
+          <Link href="/docs" className="w-full sm:w-auto">
             <MagneticButton>
-              <button
-                style={{
-                  padding: '1.2rem 3rem',
-                  background: 'rgba(255,255,255,0.05)',
-                  border: '1px solid rgba(255,255,255,0.15)',
-                  color: 'white',
-                  fontWeight: 600,
-                  fontSize: '1rem',
-                  borderRadius: '9999px',
-                  cursor: 'pointer',
-                  backdropFilter: 'blur(10px)',
-                  transition: 'all 0.3s ease',
-                  fontFamily: "'Inter', sans-serif"
-                }}
-              >
-                Explore Solutions
+              <button className="w-full px-10 py-5 bg-white/5 border border-white/10 backdrop-blur-md text-white font-bold rounded-2xl hover:bg-white/10 hover:border-white/20 transition-all duration-500 scale-100 active:scale-95">
+                View Blueprint
               </button>
             </MagneticButton>
           </Link>
         </motion.div>
       </motion.div>
 
-      {/* 🔮 Background Glow Accents */}
-      <div className="absolute bottom-[-10%] left-1/2 -translate-x-1/2 w-full h-[30%] bg-gradient-to-t from-[#6366f1]/20 to-transparent pointer-events-none blur-3xl" />
-      <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-full h-[20%] bg-gradient-to-b from-[#a855f7]/10 to-transparent pointer-events-none blur-3xl" />
+      {/* 🛸 Bottom Glow Section */}
+      <div className="absolute bottom-0 left-0 w-full h-[30vh] bg-gradient-to-t from-blue-600/10 to-transparent pointer-events-none blur-[100px]" />
     </section>
   );
 }
@@ -320,20 +183,20 @@ function MagneticButton({ children }: { children: React.ReactNode }) {
   const y = useMotionValue(0);
   const ref = useRef<HTMLDivElement>(null);
 
-  const springXOffset = useSpring(x, { stiffness: 150, damping: 15, mass: 0.1 });
-  const springYOffset = useSpring(y, { stiffness: 150, damping: 15, mass: 0.1 });
+  const springX = useSpring(x, { stiffness: 150, damping: 15 });
+  const springY = useSpring(y, { stiffness: 150, damping: 15 });
 
-  const onMouseMove = (e: React.MouseEvent) => {
+  const handleMouse = (e: React.MouseEvent) => {
     if (!ref.current) return;
     const { clientX, clientY } = e;
     const { left, top, width, height } = ref.current.getBoundingClientRect();
     const midX = clientX - (left + width / 2);
     const midY = clientY - (top + height / 2);
-    x.set(midX * 0.35);
-    y.set(midY * 0.35);
+    x.set(midX * 0.4);
+    y.set(midY * 0.4);
   };
 
-  const onMouseLeave = () => {
+  const handleReset = () => {
     x.set(0);
     y.set(0);
   };
@@ -341,9 +204,10 @@ function MagneticButton({ children }: { children: React.ReactNode }) {
   return (
     <motion.div
       ref={ref}
-      onMouseMove={onMouseMove}
-      onMouseLeave={onMouseLeave}
-      style={{ x: springXOffset, y: springYOffset, position: 'relative' }}
+      onMouseMove={handleMouse}
+      onMouseLeave={handleReset}
+      style={{ x: springX, y: springY }}
+      className="relative"
     >
       {children}
     </motion.div>

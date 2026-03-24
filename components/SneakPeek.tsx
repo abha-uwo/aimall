@@ -1,62 +1,57 @@
-import React, { useState } from 'react';
-import { motion, useMotionValue, useTransform } from 'framer-motion';
-import { ArrowUpRight } from 'lucide-react';
+'use client';
+
+import React, { useState, useRef } from 'react';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { ArrowUpRight, Cpu, Globe, Zap, Palette } from 'lucide-react';
 
 const modules = [
-  { title: "Aibiz™", icon: "💼", color: "#5d5ae6", id: "01" },
-  { title: "Aistream™", icon: "📡", color: "#9b51e0", id: "02" },
-  { title: "AIHIRE™", icon: "🤝", color: "#2e71f2", id: "03" },
-  { title: "Aistudio™", icon: "🎨", color: "#ec4899", id: "04" },
+  { title: "Aibiz™", icon: <Globe size={32} />, color: "#3b82f6", id: "01", desc: "Corporate Strategy" },
+  { title: "Aistream™", icon: <Zap size={32} />, color: "#8b5cf6", id: "02", desc: "Data Streaming" },
+  { title: "AIHIRE™", icon: <Cpu size={32} />, color: "#06b6d4", id: "03", desc: "Talent Sourcing" },
+  { title: "Aistudio™", icon: <Palette size={32} />, color: "#ec4899", id: "04", desc: "Creative Suite" },
 ];
 
 export default function SneakPeek() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
-    <section className="relative w-full bg-black py-32 px-6 md:px-12 lg:px-24 overflow-hidden" id="sneak">
+    <section className="relative w-full bg-black py-40 px-6 overflow-hidden" id="sneak">
+      {/* 🔮 Background Accent */}
+      <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-purple-600/5 blur-[150px] rounded-full pointer-events-none" />
+
       <div className="max-w-7xl mx-auto">
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 4fr',
-          gap: '40px',
-          alignItems: 'stretch'
-        }}>
-          {/* 📐 SECTION HEADER (Vertical alignment for the horizontal grid) */}
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            padding: '12px 0',
-            textAlign: 'right'
-          }}>
+        <div className="flex flex-col gap-16">
+          {/* 📐 Header */}
+          <div className="flex flex-col md:flex-row justify-between items-end gap-8">
             <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 1 }}
-              style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', height: '100%', justifyContent: 'space-between' }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
             >
-              <div>
-                <span style={{ color: '#5d5ae6', textTransform: 'uppercase', fontSize: '0.85rem', fontWeight: 800, display: 'block', marginBottom: '1.2rem', letterSpacing: '0.4rem' }}>
-                  Next Gen
-                </span>
-                <h2 style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', color: 'white', fontWeight: 900, letterSpacing: '-0.04em', lineHeight: 1 }}>
-                  Preview <br />
-                  <span style={{ opacity: 0.5 }}>A-Series™.</span>
-                </h2>
-              </div>
-              <p style={{ color: '#64748b', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.15em', fontWeight: 600 }}>
-                Explore All Modules
-              </p>
+              <span className="text-purple-500 text-xs font-black uppercase tracking-[0.4em] mb-4 block">
+                Next Generation
+              </span>
+              <h2 className="text-5xl md:text-7xl font-black text-white tracking-tighter leading-none">
+                Preview <span className="text-white/30 italic">A-Series™.</span>
+              </h2>
             </motion.div>
+            
+            <motion.p 
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className="text-white/40 text-sm font-bold uppercase tracking-[0.2em]"
+            >
+              Deployment Ready 2026
+            </motion.p>
           </div>
 
-          {/* 🃏 HORIZONTAL CARDS GRID */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
-            gap: '16px'
-          }} onMouseLeave={() => setHoveredIndex(null)}>
+          {/* 🃏 Cards Container */}
+          <div 
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+            onMouseLeave={() => setHoveredIndex(null)}
+          >
             {modules.map((mod, i) => (
               <ProjectCard 
                 key={i} 
@@ -78,115 +73,95 @@ function ProjectCard({ mod, i, isHovered, isOtherHovered, onHover }: any) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
-  const rotateX = useTransform(y, [-100, 100], [5, -5]);
-  const rotateY = useTransform(x, [-100, 100], [-5, 5]);
+  const rotateX = useSpring(useTransform(y, [-100, 100], [10, -10]), { stiffness: 100, damping: 30 });
+  const rotateY = useSpring(useTransform(x, [-100, 100], [-10, 10]), { stiffness: 100, damping: 30 });
 
-  function onMouseMove(event: any) {
+  function onMouseMove(event: React.MouseEvent) {
     const rect = event.currentTarget.getBoundingClientRect();
-    x.set(event.clientX - rect.left - rect.width / 2);
-    y.set(event.clientY - rect.top - rect.height / 2);
+    const midX = event.clientX - (rect.left + rect.width / 2);
+    const midY = event.clientY - (rect.top + rect.height / 2);
+    x.set(midX);
+    y.set(midY);
   }
 
   return (
     <motion.div
       onMouseEnter={() => onHover(i)}
       onMouseMove={onMouseMove}
-      initial={{ x: 200, opacity: 0 }}
-      whileInView={{ x: 0, opacity: 1 }}
+      onMouseLeave={() => { x.set(0); y.set(0); }}
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ 
-        delay: i * 0.2, 
-        duration: 1.4, 
+        delay: i * 0.1, 
+        duration: 1, 
         ease: [0.16, 1, 0.3, 1] 
       }}
-      animate={{
-        scale: isHovered ? 1.02 : 1,
-        opacity: isOtherHovered ? 0.6 : 1,
-      }}
       style={{ 
-        cursor: 'pointer',
-        zIndex: isHovered ? 20 : 10,
         rotateX,
         rotateY,
-        perspective: 1000
+        perspective: 1000,
+        zIndex: isHovered ? 20 : 10
       }}
+      className="relative aspect-[4/5]"
     >
-      <div 
-        style={{
-          padding: '32px 24px',
-          height: '100%',
-          borderRadius: '24px',
-          background: isHovered 
-            ? `radial-gradient(400px circle at ${x.get() + 150}px ${y.get() + 150}px, rgba(255,255,255,0.06), transparent 80%), rgba(20, 20, 20, 0.4)`
-            : 'rgba(20, 20, 20, 0.5)',
-          border: isHovered ? `1px solid ${mod.color}50` : '1px solid rgba(255,255,255,0.05)',
-          backdropFilter: 'blur(30px)',
-          transition: 'border 0.4s ease, background 0.1s ease',
-          boxShadow: isHovered 
-            ? `0 30px 60px -12px rgba(0,0,0,0.8), 0 0 40px ${mod.color}15` 
-            : '0 10px 30px rgba(0,0,0,0.3)',
-          position: 'relative',
-          overflow: 'hidden',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          textAlign: 'center'
+      <motion.div
+        animate={{
+          scale: isHovered ? 1.05 : 1,
+          opacity: isOtherHovered ? 0.4 : 1,
         }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full h-full rounded-[40px] bg-[#0a0a0a] border border-white/5 backdrop-blur-3xl p-8 flex flex-col items-center justify-between group cursor-pointer overflow-hidden transition-colors hover:border-white/20"
       >
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          background: `radial-gradient(circle at 50% 10%, ${mod.color}10, transparent 60%)`,
-          opacity: isHovered ? 1 : 0.3,
-          transition: 'opacity 0.6s ease'
-        }} />
+        {/* Glow Overlay */}
+        <div 
+          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
+          style={{
+            background: `radial-gradient(circle at center, ${mod.color}20, transparent 70%)`
+          }}
+        />
 
-        <div className="relative z-10 flex flex-col items-center">
-          <div style={{ 
-            width: '60px', 
-            height: '60px', 
-            borderRadius: '16px', 
-            background: isHovered ? mod.color : 'rgba(255,255,255,0.04)', 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center',
-            fontSize: '2rem',
-            color: 'white',
-            transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-            marginBottom: '2rem',
-            transform: isHovered ? 'scale(1.1) translateY(-5px)' : 'scale(1) translateY(0)',
-            boxShadow: isHovered ? `0 15px 30px ${mod.color}40` : 'none'
-          }}>
-            {mod.icon}
+        <div className="w-full h-full relative z-10 flex flex-col items-center justify-between">
+          <div className="w-full flex justify-between items-start">
+            <span className="text-[10px] font-black text-white/20 tracking-[0.3em] uppercase">
+              {mod.id} / SEC
+            </span>
+            <div className="text-white/20 group-hover:text-white transition-colors">
+              <ArrowUpRight size={20} />
+            </div>
           </div>
-          
-          <span style={{ fontSize: '10px', fontWeight: 900, color: 'rgba(255,255,255,0.2)', textTransform: 'uppercase', letterSpacing: '0.2rem', marginBottom: '1rem' }}>
-            System Module {mod.id}
-          </span>
 
-          <h3 style={{ color: 'white', fontSize: '1.6rem', fontWeight: 800, marginBottom: '1rem', letterSpacing: '-0.02em' }}>
-            {mod.title}
-          </h3>
-          
-          <div style={{ 
-            opacity: isHovered ? 1 : 0.4, 
-            transition: 'all 0.4s ease',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            color: mod.color,
-            fontSize: '0.75rem',
-            fontWeight: 800,
-            textTransform: 'uppercase',
-            letterSpacing: '0.1rem'
-          }}>
-            Experience <ArrowUpRight size={14} />
+          <div className="flex flex-col items-center gap-6">
+            <motion.div 
+              animate={{ 
+                y: isHovered ? -10 : 0,
+                color: isHovered ? mod.color : "#fff" 
+              }}
+              className="p-6 bg-white/5 rounded-[32px] group-hover:bg-white/10 transition-colors"
+            >
+              {mod.icon}
+            </motion.div>
+            <div className="text-center">
+              <h3 className="text-3xl font-black text-white tracking-tighter mb-1">
+                {mod.title}
+              </h3>
+              <p className="text-[10px] uppercase font-bold tracking-[0.2em] text-white/30">
+                {mod.desc}
+              </p>
+            </div>
+          </div>
+
+          <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+             <motion.div 
+                initial={{ width: 0 }}
+                whileInView={{ width: "100%" }}
+                transition={{ duration: 2, delay: i * 0.2 }}
+                className="h-full bg-white/20"
+                style={{ backgroundColor: mod.color }}
+             />
           </div>
         </div>
-      </div>
+      </motion.div>
     </motion.div>
   );
 }

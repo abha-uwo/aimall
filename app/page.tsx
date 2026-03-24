@@ -4,9 +4,6 @@ import React, { useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 
 // Components
-const HomeRobotScene = dynamic(() => import('@/components/HomeRobotScene'), { ssr: false });
-
-import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import ValuePillars from '@/components/ValuePillars';
 import SneakPeek from '@/components/SneakPeek';
@@ -31,8 +28,6 @@ export default function Home() {
     <main className="main-content">
       <AmbientBackground />
       <div className="site-content">
-        <Navbar />
-
         <div className="scroll-container home-scroll-container relative z-10">
           <div id="hero"><Hero /></div>
           <div id="value"><ValuePillars /></div>

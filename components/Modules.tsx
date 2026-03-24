@@ -1,153 +1,121 @@
+'use client';
+
+import React from 'react';
 import { motion } from 'framer-motion';
+import { Box, Code2, Users, BarChart3, ArrowRight } from 'lucide-react';
 
 const modules = [
-  { name: "Aihome™", desc: "Automate your living space with intelligent controls." },
-  { name: "AiOffice™", desc: "Digital productivity and task automation for modern teams." },
-  { name: "AiDesk™", desc: "Customer support and experience reimagined through AI." },
-  { name: "Aisales™", desc: "Intelligent lead generation and conversion pipeline." }
+  { 
+    name: "Aibiz™", 
+    desc: "Strategic enterprise automation for scale and efficiency.",
+    icon: <BarChart3 className="text-blue-400" size={24} />,
+    color: "from-blue-500/20"
+  },
+  { 
+    name: "AiOffice™", 
+    desc: "Next-gen workspace orchestration for high-performance teams.",
+    icon: <Box className="text-purple-400" size={24} />,
+    color: "from-purple-500/20"
+  },
+  { 
+    name: "AiDesk™", 
+    desc: "Intelligent customer experience and autonomous resolution.",
+    icon: <Users className="text-cyan-400" size={24} />,
+    color: "from-cyan-500/20"
+  },
+  { 
+    name: "Aisales™", 
+    desc: "Predictive revenue pipelines and conversion optimization.",
+    icon: <Code2 className="text-indigo-400" size={24} />,
+    color: "from-indigo-500/20"
+  }
 ];
 
 export default function Modules() {
   return (
-    <>
-    <style dangerouslySetInnerHTML={{ __html: `
-      .canvas-layout {
-        display: flex;
-        align-items: flex-start;
-        justify-content: flex-start; /* Text on LEFT */
-        max-width: 1500px;
-        margin: 0 auto;
-        min-height: 100vh;
-        padding-top: 15vh;
-        padding-bottom: 10vh;
-        padding-left: 20%; /* Moved closer to center */
-        position: relative;
-      }
-      .canvas-wrap {
-        width: 55%; 
-        position: relative;
-        z-index: 10;
-        text-align: left;
-      }
-      .canvas-stack {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 2rem;
-      }
-      .canvas-filament {
-        position: relative;
-        padding: 2.5rem;
-        background: rgba(255,255,255,0.02);
-        border: 1px solid rgba(255,255,255,0.05);
-        border-radius: 20px;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        justify-content: flex-start;
-        gap: 1.5rem;
-        cursor: pointer;
-        transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-        overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-      }
-      .canvas-filament:hover {
-        background: rgba(255,255,255,0.05);
-        border-color: rgba(6, 182, 212, 0.4);
-        transform: translateY(-10px) scale(1.02);
-        box-shadow: 0 40px 80px rgba(0,0,0,0.6), inset 0 0 30px rgba(6,182,212,0.05);
-      }
-      .canvas-filament:hover .canvas-pulse {
-        transform: scale(1.5);
-        background: white;
-        box-shadow: 0 0 20px white;
-      }
-      .canvas-pulse {
-        width: 8px;
-        height: 8px;
-        background: #06b6d4;
-        border-radius: 50%;
-        box-shadow: 0 0 15px #06b6d4;
-        position: relative;
-        transition: all 0.4s ease;
-      }
-      .canvas-pulse::after {
-        content: '';
-        position: absolute;
-        inset: -10px;
-        border: 1px solid rgba(6, 182, 212, 0.2);
-        border-radius: 50%;
-        animation: canvas-flare 2s infinite linear;
-      }
-      @keyframes canvas-flare {
-        0% { transform: scale(1); opacity: 0; }
-        50% { opacity: 0.5; }
-        100% { transform: scale(4); opacity: 0; }
-      }
-      @media (max-width: 900px) {
-        .canvas-layout { padding-top: 55vh; justify-content: center; padding-right: 1.5rem; }
-        .canvas-wrap { max-width: 100%; }
-      }
-    `}} />
+    <section className="relative py-32 px-6 bg-black overflow-hidden" id="modules">
+      {/* 🔮 Background Glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-600/5 blur-[120px] rounded-full pointer-events-none" />
 
-    <section className="modules-section relative" id="modules">
-      <div className="canvas-layout">
-        <motion.div 
-          className="canvas-wrap"
-          initial={{ opacity: 0, x: 50 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1 }}
-        >
-          <div className="canvas-header" style={{ marginBottom: '3rem' }}>
-            <motion.span 
-              initial={{ opacity: 0, letterSpacing: '1em' }}
-              whileInView={{ opacity: 1, letterSpacing: '0.4em' }}
-              transition={{ duration: 1.2 }}
-              style={{ color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', fontSize: '0.75rem', fontWeight: 800, display: 'block', marginBottom: '1rem' }}
-            >
+      <div className="max-w-7xl mx-auto relative z-10">
+        <div className="flex flex-col lg:flex-row gap-20 items-start">
+          
+          {/* 📝 Left Content */}
+          <motion.div 
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:w-1/3 pt-4"
+          >
+            <span className="text-blue-500 text-xs font-black uppercase tracking-[0.4em] mb-6 block">
               Execution Layer
-            </motion.span>
-            <motion.h2 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', color: 'white', fontWeight: 900, letterSpacing: '-0.02em', lineHeight: 1.1, whiteSpace: 'nowrap' }}
+            </span>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tighter leading-tight mb-8">
+              Intelligent <br />
+              <span className="text-white/40">Performance.</span>
+            </h2>
+            <p className="text-white/50 text-lg leading-relaxed mb-10">
+              A distributed network of AI agents designed to handle the complexity of modern business operations with zero latency.
+            </p>
+            
+            <motion.button 
+              whileHover={{ x: 10 }}
+              className="text-white font-bold flex items-center gap-3 group"
             >
-              Intelligent Performance.
-            </motion.h2>
-          </div>
+              System Documentation <ArrowRight size={18} className="text-blue-500 group-hover:translate-x-1 transition-transform" />
+            </motion.button>
+          </motion.div>
 
-          <div className="canvas-stack">
+          {/* 🃏 Card Grid */}
+          <div className="lg:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
             {modules.map((mod, i) => (
-              <motion.div 
-                key={i} 
-                className="canvas-filament"
-                initial={{ opacity: 0, y: 30, scale: 0.95 }}
-                whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ delay: i * 0.1, duration: 0.8, ease: "easeOut" }}
-                viewport={{ once: true }}
-              >
-                <div className="canvas-pulse" />
-                <div style={{ flex: 1 }}>
-                  <h3 style={{ 
-                    fontSize: '1.3rem', 
-                    fontWeight: 800, 
-                    marginBottom: '0.6rem',
-                    background: 'linear-gradient(to right, #ffffff, #94a3b8)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    letterSpacing: '-0.02em'
-                  }}>
-                    {mod.name}
-                  </h3>
-                  <p style={{ color: '#64748b', fontSize: '0.9rem', lineHeight: 1.5, margin: 0, fontWeight: 400 }}>{mod.desc}</p>
-                </div>
-              </motion.div>
+              <ModuleCard key={i} mod={mod} index={i} />
             ))}
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
-    </>
+  );
+}
+
+function ModuleCard({ mod, index }: { mod: any, index: number }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30, scale: 0.95 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      whileHover={{ y: -10 }}
+      className="group relative p-8 rounded-[32px] bg-white/[0.03] border border-white/[0.08] backdrop-blur-3xl overflow-hidden cursor-pointer hover:bg-white/[0.05] hover:border-white/20 transition-all duration-500"
+    >
+      {/* Card Gradient Background */}
+      <div className={`absolute inset-0 bg-gradient-to-br ${mod.color} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700`} />
+      
+      {/* Content */}
+      <div className="relative z-10">
+        <div className="mb-12 p-4 bg-white/5 rounded-2xl w-fit group-hover:scale-110 transition-transform duration-500">
+          {mod.icon}
+        </div>
+        
+        <h3 className="text-2xl font-black text-white mb-3 tracking-tight">
+          {mod.name}
+        </h3>
+        
+        <p className="text-white/40 group-hover:text-white/60 transition-colors duration-500 leading-relaxed">
+          {mod.desc}
+        </p>
+
+        {/* Hover Arrow */}
+        <div className="mt-8 flex justify-end">
+          <div className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 group-hover:translate-x-0 translate-x-4 transition-all duration-500">
+            <ArrowRight size={16} className="text-white" />
+          </div>
+        </div>
+      </div>
+
+      {/* Subtle Bottom Light */}
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/2 h-1 bg-white/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+    </motion.div>
   );
 }
